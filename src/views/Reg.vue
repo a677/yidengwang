@@ -28,28 +28,28 @@
             </div>
             <div class="form-group">
               <label for="uname">用户名：</label>
-              <input type="text" placeholder="请输入用户名" name="uname" id="uname" minlength="3" maxlength="12">
-              <span class="msg-error">用户名不能为空</span>
+              <input type="text" id="uname" minlength="6" maxlength="12" placeholder="请输入用户名" v-model="name" @blur="checkname()">
+              <span :style="NameStyle" v-text="msgname"></span>
             </div>
             <div class="form-group">
               <label for="upwd">登录密码：</label>
               <input type="password" placeholder="请输入密码" name="upwd" id="upwd" minlength="6" maxlength="12">
-              <span class="msg-error">密码不能为空</span>
+              <span class="msg-error">密码长度3-12位</span>
             </div>
             <div class="form-group">
               <label for="upwdconfirm">确认密码：</label>
               <input type="password" placeholder="请确认密码" name="upwdconfirm" id="upwdconfirm" minlength="6" maxlength="12">
-              <span class="msg-default hidden">确认密码不能为空</span>
+              <span class="msg-default hidden">请再次输入密码</span>
             </div>
             <div class="form-group">
               <label for="email">邮箱：</label>
-              <input type="email" placeholder="请输入邮箱地址" name="email" id="email">
-              <span class="msg-default hidden">邮箱不能为空</span>
+              <input type="email" placeholder="请输入邮箱地址" name="email" id="email" v-model="email" @blur="checkemail()">
+              <span v-text="msgemail" :style="emailStyle"></span>
             </div>
             <div class="form-group">
               <label for="phone">手机号：</label>
               <input type="text" placeholder="请输入您的手机号" name="phone" id="phone" pattern="(\+86|0086)?\s*1[3-8]\d{9}">
-              <span class="msg-default hidden">请输入合法的手机号</span>
+              <span class="msg-default hidden">请输入有效的手机号</span>
             </div>
             
             <div class="form-group">
@@ -67,7 +67,47 @@
 <script>
   export default {
     data(){
-      return{}
+      return{
+        name:"",
+        msgname:"请输入3-12位",
+        NameStyle:{
+          color:'blank'
+        },
+        email:"",
+        msgemail:"请输入有效邮箱",
+        emailStyle:{
+          color:'blank'
+        }
+      }
+    },
+    methods:{
+      checkname:function(){
+        if(this.name.length==0){
+          this.msgname="用户名不能为空";
+          this.NameStyle.color='red';
+        }else if(this.name.length>=3&&this.name.length<=12){
+          this.msgname="格式正确";
+          this.NameStyle.color='blue';
+        }else{
+          this.msgname="格式错误";
+          this.NameStyle.color='red';
+        }
+      },
+      checkemail:function(){
+        if(this.email==''){
+          this.msgemail="邮箱不能为空";
+          this.emailStyle.color='red';
+        }else{
+          var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          if(!reg.test(this.email)){
+            this.msgemail="请输入有效的邮箱"
+            this.emailStyle.color='red'
+          }else{
+            this.msgemail="格式正确";
+            this.emailStyle.color='blue'
+          }
+        }
+      }
     }
   }
 </script>
@@ -158,4 +198,7 @@
       font-weight:bold;
       cursor:pointer;
   }
+ .hasRed{
+   color:red
+ }
 </style>
